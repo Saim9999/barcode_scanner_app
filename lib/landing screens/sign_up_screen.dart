@@ -6,14 +6,11 @@ import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
-import 'package:get/get_core/src/get_main.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:internet_connection_checker/internet_connection_checker.dart';
-import 'package:path/path.dart' as path;
 
 import '../models/ui_helper.dart';
-import '../qcode_scanner.dart';
 import 'sign_in_screen.dart';
 
 class SignupScreen extends StatefulWidget {
