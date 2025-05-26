@@ -262,7 +262,10 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                   SnackBar(content: Text('Profile updated!')),
                                 );
                               },
-                              child: Text('Update Profile'),
+                              child: Text(
+                                'Update Profile',
+                                style: TextStyle(color: Colors.white),
+                              ),
                             ),
                             ElevatedButton(
                               onPressed: () {
@@ -272,7 +275,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                   listen: false,
                                 ).toggleTheme();
                               },
-                              child: Text('Switch Theme'),
+                              child: Text('Switch Theme',),
                             ),
                             SizedBox(height: 16),
                             Text(

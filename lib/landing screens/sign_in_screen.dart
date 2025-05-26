@@ -32,11 +32,11 @@ class _SignInScreenState extends State<SignInScreen> {
         _isLoading = true; // Start showing the progress indicator
       });
       try {
-        final authResult =
-            await FirebaseAuth.instance.signInWithEmailAndPassword(
-          email: _emailController.text,
-          password: _passwordController.text,
-        );
+        final authResult = await FirebaseAuth.instance
+            .signInWithEmailAndPassword(
+              email: _emailController.text,
+              password: _passwordController.text,
+            );
 
         if (authResult.user != null) {
           // FocusScope.of(context).unfocus();
@@ -47,18 +47,27 @@ class _SignInScreenState extends State<SignInScreen> {
           );
         } else {
           // Show alert dialog if sign-in is unsuccessful
-          UIHelper.showAlertDialog(context, "Error Occurred!",
-              "Invalid email or password. Please try again.");
+          UIHelper.showAlertDialog(
+            context,
+            "Error Occurred!",
+            "Invalid email or password. Please try again.",
+          );
         }
       } on FirebaseAuthException catch (e) {
         if (e.code == 'wrong-password') {
           // Show alert dialog for wrong password
           UIHelper.showAlertDialog(
-              context, "Error Occurred!", "Wrong password. Please try again!");
+            context,
+            "Error Occurred!",
+            "Wrong password. Please try again!",
+          );
         } else {
           // Show alert dialog for other sign-in errors
           UIHelper.showAlertDialog(
-              context, "Error Occurred!", "Please enter valid email!");
+            context,
+            "Error Occurred!",
+            "Please enter valid email!",
+          );
         }
       } catch (e) {
         // Handle other errors
@@ -88,8 +97,9 @@ class _SignInScreenState extends State<SignInScreen> {
       );
 
       // Sign in with the credential
-      final UserCredential userCredential =
-          await _auth.signInWithCredential(credential);
+      final UserCredential userCredential = await _auth.signInWithCredential(
+        credential,
+      );
 
       // Get the user details
       final User? user = userCredential.user;
@@ -97,10 +107,11 @@ class _SignInScreenState extends State<SignInScreen> {
       final String? email = user.email;
 
       // Check if the user signed up with Google
-      final QuerySnapshot snapshot = await FirebaseFirestore.instance
-          .collection('users')
-          .where('email', isEqualTo: email)
-          .get();
+      final QuerySnapshot snapshot =
+          await FirebaseFirestore.instance
+              .collection('users')
+              .where('email', isEqualTo: email)
+              .get();
 
       if (snapshot.size > 0) {
         // User signed up with Google, navigate to the QR code screen
@@ -112,19 +123,21 @@ class _SignInScreenState extends State<SignInScreen> {
         // User did not sign up with Google, show an alert dialog
         showDialog(
           context: context,
-          builder: (context) => AlertDialog(
-            title: Text('Sign Up with Google First'),
-            content: Text(
-                'You need to sign up with Google before you can log in with Google.'),
-            actions: [
-              TextButton(
-                onPressed: () {
-                  Navigator.pop(context);
-                },
-                child: Text('OK'),
+          builder:
+              (context) => AlertDialog(
+                title: Text('Sign Up with Google First'),
+                content: Text(
+                  'You need to sign up with Google before you can log in with Google.',
+                ),
+                actions: [
+                  TextButton(
+                    onPressed: () {
+                      Navigator.pop(context);
+                    },
+                    child: Text('OK'),
+                  ),
+                ],
               ),
-            ],
-          ),
         );
       }
     } catch (e) {
@@ -132,19 +145,21 @@ class _SignInScreenState extends State<SignInScreen> {
       // Show an error dialog
       showDialog(
         context: context,
-        builder: (context) => AlertDialog(
-          title: Text('Error Occurred!'),
-          content: Text(
-              'An error occurred while signing in with Google. Please try again later.'),
-          actions: [
-            TextButton(
-              onPressed: () {
-                Navigator.pop(context);
-              },
-              child: Text('OK'),
+        builder:
+            (context) => AlertDialog(
+              title: Text('Error Occurred!'),
+              content: Text(
+                'An error occurred while signing in with Google. Please try again later.',
+              ),
+              actions: [
+                TextButton(
+                  onPressed: () {
+                    Navigator.pop(context);
+                  },
+                  child: Text('OK'),
+                ),
+              ],
             ),
-          ],
-        ),
       );
     }
   }
@@ -154,7 +169,7 @@ class _SignInScreenState extends State<SignInScreen> {
     return await InternetConnectionChecker.instance.hasConnection;
   }
 
-// Function to display the "No Internet" dialog box
+  // Function to display the "No Internet" dialog box
   void showNoInternetDialog(BuildContext context) {
     showDialog(
       context: context,
@@ -165,7 +180,8 @@ class _SignInScreenState extends State<SignInScreen> {
           actions: <Widget>[
             ElevatedButton(
               style: ElevatedButton.styleFrom(
-                  backgroundColor: Color.fromARGB(255, 215, 139, 25)),
+                backgroundColor: Color.fromARGB(255, 215, 139, 25),
+              ),
               child: Text('OK'),
               onPressed: () {
                 Navigator.of(context).pop();
@@ -181,201 +197,224 @@ class _SignInScreenState extends State<SignInScreen> {
   Widget build(BuildContext context) {
     return ScreenUtilInit(
       useInheritedMediaQuery: true,
-      builder: (context, child) => Scaffold(
-        body: Column(
-          children: [
-            Container(
-              height: 250.h,
-              width: double.infinity.w,
-              decoration: BoxDecoration(
-                  image: DecorationImage(
+      builder:
+          (context, child) => Scaffold(
+            body: Column(
+              children: [
+                Container(
+                  height: 250.h,
+                  width: double.infinity.w,
+                  decoration: BoxDecoration(
+                    image: DecorationImage(
                       image: AssetImage('assets/images/Group 51 (4).png'),
-                      fit: BoxFit.cover)),
-            ),
-            Expanded(
-              child: Padding(
-                padding: EdgeInsets.only(left: 15, right: 15),
-                child: Form(
-                  key: _formKey,
-                  child: ListView(
-                    children: [
-                      TextFormField(
-                        controller: _emailController,
-                        textInputAction: TextInputAction.next,
-                        decoration: InputDecoration(
-                          labelText: 'Email',
-                          labelStyle: TextStyle(
-                              color: Color.fromARGB(255, 215, 139, 25)),
-                          focusedBorder: UnderlineInputBorder(
-                            borderSide: BorderSide(
-                                color: Color.fromARGB(255, 215, 139, 25)),
-                          ),
-                        ),
-                        cursorColor: Color.fromARGB(255, 215, 139, 25),
-                        validator: (value) {
-                          if (value!.isEmpty) {
-                            return 'Please enter your email.';
-                          }
-                          return null;
-                        },
-                      ),
-                      TextFormField(
-                        controller: _passwordController,
-                        textInputAction: TextInputAction.done,
-                        decoration: InputDecoration(
-                          labelText: 'Password',
-                          labelStyle: TextStyle(
-                              color: Color.fromARGB(255, 215, 139, 25)),
-                          focusedBorder: UnderlineInputBorder(
-                            borderSide: BorderSide(
-                                color: Color.fromARGB(255, 215, 139, 25)),
-                          ),
-                          suffixIcon: IconButton(
-                            icon: Icon(
-                                _obscureText
-                                    ? Icons.visibility_off
-                                    : Icons.visibility,
-                                color: const Color.fromARGB(255, 215, 139, 25)),
-                            onPressed: () {
-                              setState(() {
-                                _obscureText = !_obscureText;
-                              });
-                            },
-                          ),
-                        ),
-                        cursorColor: Color.fromARGB(255, 215, 139, 25),
-                        obscureText: _obscureText,
-                        validator: (value) {
-                          if (value!.isEmpty) {
-                            return 'Please enter your password.';
-                          }
-                          return null;
-                        },
-                      ),
-                      SizedBox(height: 20.0.h),
-                      ElevatedButton(
-                        style: ElevatedButton.styleFrom(
-                            backgroundColor: Color.fromARGB(255, 215, 139, 25)),
-                        onPressed: 
-                        //  _isLoading ? null : signIn,
-                        () async {
-                          bool isConnected = await checkInternetConnectivity();
-                          if (isConnected) {
-                            _isLoading ? null : signIn(context);
-                          } else {
-                            showNoInternetDialog(context);
-                          }
-                        },
-                        child: Text(
-                          'Sign In',
-                        ),
-                      ),
-                      SizedBox(
-                        height: 10.h,
-                      ),
-                      if (_isLoading)
-                        Center(
-                          child: CircularProgressIndicator(),
-                        ),
-                      Row(
-                        children: [
-                          TextButton(
-                              onPressed: () {
-                                Get.to(ForgotPasswordScreen());
-                              },
-                              child: Text(
-                                'Forgot your Password',
-                                style: TextStyle(
-                                    color: Color.fromARGB(255, 215, 139, 25)),
-                              )),
-                        ],
-                      ),
-                      Row(
-                        children: [
-                          Expanded(
-                              flex: 3,
-                              child: Divider(
-                                thickness: 1,
-                              )),
-                          SizedBox(
-                            width: 30.w,
-                          ),
-                          Expanded(
-                            flex: 1,
-                            child: Text(
-                              'Or',
-                              style: TextStyle(
-                                  fontSize: 18.sp,
-                                  color: Color.fromARGB(255, 215, 139, 25)),
-                            ),
-                          ),
-                          Expanded(
-                              flex: 3,
-                              child: Divider(
-                                thickness: 1,
-                              )),
-                        ],
-                      ),
-                      SizedBox(
-                        height: 10.h,
-                      ),
-                      ElevatedButton(
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor: Color.fromARGB(255, 215, 139, 25),
-                        ),
-                        onPressed: () async {
-                          bool isConnected = await checkInternetConnectivity();
-                          if (isConnected) {
-                            signInWithGoogle(context);
-                          } else {
-                            showNoInternetDialog(context);
-                          }
-                        },
-                        child: Row(
-                          mainAxisSize: MainAxisSize.min,
-                          children: [
-                            SizedBox(width: 8),
-                            Text('Sign In with   '),
-                            Container(
-                              height: 25.h,
-                              width: 25.h,
-                              decoration: BoxDecoration(
-                                  image: DecorationImage(
-                                      image: AssetImage(
-                                          'assets/images/google (1).png'))),
-                            )
-                          ],
-                        ),
-                      ),
-                      // ElevatedButton(
-                      //   onPressed: signInWithGoogle,
-                      //   child: Text('Sign In with Google'),
-                      // ),
-                      Row(
-                        children: [
-                          Text('Dont have an account?'),
-                          TextButton(
-                            onPressed: () {
-                              Get.to(SignupScreen());
-                            },
-                            child: Text('Sign Up',
-                                style: TextStyle(
-                                    color: Color.fromARGB(255, 215, 139, 25))),
-                          ),
-                        ],
-                      ),
-                      // ElevatedButton(
-                      //   onPressed: _signInWithGoogle,
-                      //   child: Text('Sign in with Google'),
-                      // )
-                    ],
+                      fit: BoxFit.cover,
+                    ),
                   ),
                 ),
-              ),
+                Expanded(
+                  child: Padding(
+                    padding: EdgeInsets.only(left: 15, right: 15),
+                    child: Form(
+                      key: _formKey,
+                      child: ListView(
+                        children: [
+                          TextFormField(
+                            controller: _emailController,
+                            textInputAction: TextInputAction.next,
+                            decoration: InputDecoration(
+                              labelText: 'Email',
+                              labelStyle: TextStyle(
+                                color: Color.fromARGB(255, 215, 139, 25),
+                              ),
+                              focusedBorder: UnderlineInputBorder(
+                                borderSide: BorderSide(
+                                  color: Color.fromARGB(255, 215, 139, 25),
+                                ),
+                              ),
+                            ),
+                            cursorColor: Color.fromARGB(255, 215, 139, 25),
+                            validator: (value) {
+                              if (value!.isEmpty) {
+                                return 'Please enter your email.';
+                              }
+                              return null;
+                            },
+                          ),
+                          TextFormField(
+                            controller: _passwordController,
+                            textInputAction: TextInputAction.done,
+                            decoration: InputDecoration(
+                              labelText: 'Password',
+                              labelStyle: TextStyle(
+                                color: Color.fromARGB(255, 215, 139, 25),
+                              ),
+                              focusedBorder: UnderlineInputBorder(
+                                borderSide: BorderSide(
+                                  color: Color.fromARGB(255, 215, 139, 25),
+                                ),
+                              ),
+                              suffixIcon: IconButton(
+                                icon: Icon(
+                                  _obscureText
+                                      ? Icons.visibility_off
+                                      : Icons.visibility,
+                                  color: const Color.fromARGB(
+                                    255,
+                                    215,
+                                    139,
+                                    25,
+                                  ),
+                                ),
+                                onPressed: () {
+                                  setState(() {
+                                    _obscureText = !_obscureText;
+                                  });
+                                },
+                              ),
+                            ),
+                            cursorColor: Color.fromARGB(255, 215, 139, 25),
+                            obscureText: _obscureText,
+                            validator: (value) {
+                              if (value!.isEmpty) {
+                                return 'Please enter your password.';
+                              }
+                              return null;
+                            },
+                          ),
+                          SizedBox(height: 20.0.h),
+                          ElevatedButton(
+                            style: ElevatedButton.styleFrom(
+                              backgroundColor: Color.fromARGB(
+                                255,
+                                215,
+                                139,
+                                25,
+                              ),
+                            ),
+                            onPressed:
+                            //  _isLoading ? null : signIn,
+                            () async {
+                              bool isConnected =
+                                  await checkInternetConnectivity();
+                              if (isConnected) {
+                                _isLoading ? null : signIn(context);
+                              } else {
+                                showNoInternetDialog(context);
+                              }
+                            },
+                            child: Text(
+                              'Sign In',
+                              style: TextStyle(color: Colors.white),
+                            ),
+                          ),
+                          SizedBox(height: 10.h),
+                          if (_isLoading)
+                            Center(child: CircularProgressIndicator()),
+                          Row(
+                            children: [
+                              TextButton(
+                                onPressed: () {
+                                  Get.to(ForgotPasswordScreen());
+                                },
+                                child: Text(
+                                  'Forgot your Password',
+                                  style: TextStyle(
+                                    color: Color.fromARGB(255, 215, 139, 25),
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
+                          Row(
+                            children: [
+                              Expanded(flex: 3, child: Divider(thickness: 1)),
+                              SizedBox(width: 30.w),
+                              Expanded(
+                                flex: 1,
+                                child: Text(
+                                  'Or',
+                                  style: TextStyle(
+                                    fontSize: 18.sp,
+                                    color: Color.fromARGB(255, 215, 139, 25),
+                                  ),
+                                ),
+                              ),
+                              Expanded(flex: 3, child: Divider(thickness: 1)),
+                            ],
+                          ),
+                          SizedBox(height: 10.h),
+                          ElevatedButton(
+                            style: ElevatedButton.styleFrom(
+                              backgroundColor: Color.fromARGB(
+                                255,
+                                215,
+                                139,
+                                25,
+                              ),
+                            ),
+                            onPressed: () async {
+                              bool isConnected =
+                                  await checkInternetConnectivity();
+                              if (isConnected) {
+                                signInWithGoogle(context);
+                              } else {
+                                showNoInternetDialog(context);
+                              }
+                            },
+                            child: Row(
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                SizedBox(width: 8),
+                                Text(
+                                  'Sign In with   ',
+                                  style: TextStyle(color: Colors.white),
+                                ),
+                                Container(
+                                  height: 25.h,
+                                  width: 25.h,
+                                  decoration: BoxDecoration(
+                                    image: DecorationImage(
+                                      image: AssetImage(
+                                        'assets/images/google (1).png',
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                          // ElevatedButton(
+                          //   onPressed: signInWithGoogle,
+                          //   child: Text('Sign In with Google'),
+                          // ),
+                          Row(
+                            children: [
+                              Text('Dont have an account?'),
+                              TextButton(
+                                onPressed: () {
+                                  Get.to(SignupScreen());
+                                },
+                                child: Text(
+                                  'Sign Up',
+                                  style: TextStyle(
+                                    color: Color.fromARGB(255, 215, 139, 25),
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
+                          // ElevatedButton(
+                          //   onPressed: _signInWithGoogle,
+                          //   child: Text('Sign in with Google'),
+                          // )
+                        ],
+                      ),
+                    ),
+                  ),
+                ),
+              ],
             ),
-          ],
-        ),
-      ),
+          ),
     );
   }
 }
