@@ -1,6 +1,6 @@
-import 'dart:ui';
-
 import 'package:barcode_app/qrcodescannerpage.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -20,6 +20,25 @@ class QRCodeScannerScreen extends StatefulWidget {
 class _QRCodeScannerScreenState extends State<QRCodeScannerScreen> {
   String _scannedResult = '';
   WebViewController? _webViewController;
+
+  final user = FirebaseAuth.instance.currentUser;
+  Future<void> loadProfile() async {
+    final doc =
+        await FirebaseFirestore.instance
+            .collection('users')
+            .doc(user!.uid)
+            .get();
+    final data = doc.data();
+    if (data != null) {
+      setState(() {});
+    }
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    loadProfile();
+  }
 
   Future<void> _scanQRCode() async {
     await Navigator.push(

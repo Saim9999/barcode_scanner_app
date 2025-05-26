@@ -1,6 +1,6 @@
 import 'dart:async';
 
-import 'package:barcode_app/qcode_scanner.dart';
+import 'package:barcode_app/landing%20screens/wrapper.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
@@ -16,7 +16,7 @@ class _SPlashScreenState extends State<SPlashScreen> {
   @override
   void initState() {
     super.initState();
-    Timer(const Duration(seconds: 3), () => Get.to(QRCodeScannerScreen()));
+    Timer(const Duration(seconds: 3), () => Get.to(WrapperPage()));
   }
 
   @override
