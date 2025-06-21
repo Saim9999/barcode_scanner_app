@@ -275,7 +275,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                   listen: false,
                                 ).toggleTheme();
                               },
-                              child: Text('Switch Theme',),
+                              child: Text('Switch Theme'),
                             ),
                             SizedBox(height: 16),
                             Text(

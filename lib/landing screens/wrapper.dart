@@ -22,17 +22,6 @@ class _WrapperPageState extends State<WrapperPage> {
           } else {
             return SignInScreen();
           }
-          // if (snapshot.hasData) {
-          //   print(snapshot.data);
-          //   if (snapshot.data!.emailVerified) {
-          //     return Homepage();
-          //   } else {
-          //     return VerifyPage();
-          //   }
-          // }
-          //  else {
-          //   return LoginPage();
-          // }
         },
       ),
     );
